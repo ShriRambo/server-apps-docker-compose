@@ -1,0 +1,12 @@
+---
+version: "3.1"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    volumes:
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/mosquitto/data:/mosquitto/data
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/mosquitto/log:/mosquitto/log
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/mosquitto/config:/mosquitto/config
+    restart: unless-stopped

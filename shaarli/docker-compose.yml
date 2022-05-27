@@ -1,0 +1,34 @@
+
+
+# Create a docker compose from this
+
+# download the 'latest' image from dockerhub
+docker pull shaarli/shaarli
+
+# create persistent data volumes/directories on the host
+docker volume create shaarli-data
+docker volume create shaarli-cache
+
+# create a new container using the Shaarli image
+# --detach: run the container in background
+# --name: name of the created container/instance
+# --publish: map the host's :8000 port to the container's :80 port
+# --rm: automatically remove the container when it exits
+# --volume: mount persistent volumes in the container ($volume_name:$volume_mountpoint)
+docker run --detach \
+           --name myshaarli \
+           --publish 8000:80 \
+           --rm \
+           --volume shaarli-data:/var/www/shaarli/data \
+           --volume shaarli-cache:/var/www/shaarli/cache \
+           shaarli/shaarli:latest
+
+# verify that the container is running
+docker ps | grep myshaarli
+
+# to completely remove the container
+docker stop myshaarli # stop the running container
+docker ps | grep myshaarli # verify the container is no longer running
+docker ps -a | grep myshaarli # verify the container is stopped
+docker rm myshaarli # destroy the container
+docker ps -a | grep myshaarli # verify th cont
