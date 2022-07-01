@@ -1,0 +1,46 @@
+  version: "3.4"
+  services:
+    broker:
+      image: redis:6.0
+      name: paperless-redis-broker
+      restart: unless-stopped
+      volumes:
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/redisdata:/data
+
+    db:
+      image: postgres:13
+      name: paperless-db
+      restart: unless-stopped
+      volumes:
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/pgdata:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: paperless
+        POSTGRES_USER: paperless
+        POSTGRES_PASSWORD: paperless
+
+    webserver:
+      image: ghcr.io/paperless-ngx/paperless-ngx:latest
+      name: paperless-webserver
+      restart: unless-stopped
+      depends_on:
+        - db
+        - broker
+      ports:
+        - 49160:8000
+      healthcheck:
+        test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+      volumes:
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/data:/usr/src/paperless/data
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/media:/usr/src/paperless/media
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/export:/usr/src/paperless/export
+        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/inbox:/usr/src/paperless/consume
+      #env_file: docker-compose.env
+      environment:
+        PAPERLESS_REDIS: redis://broker:6379
+        PAPERLESS_DBHOST: db
+        COMPOSE_PROJECT_NAME: paperless
+        PAPERLESS_ADMIN_USER: admin
+        PAPERLESS_ADMIN_PASSWORD: admin
