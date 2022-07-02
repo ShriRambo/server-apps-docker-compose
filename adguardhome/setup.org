@@ -39,7 +39,3 @@ There are many ports exposed by the container and many of them are to be mapped 
 + 68 (tcp/udp) :: Bootstrap protocol client. Used by client machines to obtain dynamic IP addressing information from a DHCP server.
 + 853 (tcp)  ::  DNS over TLS. A bit more secured.
 + 3000 (tcp) :: AdGuard Home web interface.
-
-* Refrences
-- [[https://github.com/paperless-ngx/paperless-ngx][Paperless-ngx Github]]
-- [[https://github.com/bauerj/paperless_app][Paperless app]]
