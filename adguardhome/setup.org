@@ -1,0 +1,45 @@
+#+TITLE: AdGuardhome Setup
+#+AUTHOR: shrirambo
+#+DATE: 1st of July, 2022
+#+OPTIONS: tex:t toc:nil
+
+----------------
+Adguard home is a software that blocks ads and trackers over your complete network. And for it to work, no client side apps are required at all. Adguard achieves this by acting as a dns server and redirects all the requests to domains, which are known to be ad servers or trackers, to black hole. We can also add our own list of domain names or from a publicaly maintained list of trackers. 
+
+*  Docker compose file
+Here is my docker compose file.
+
+#+BEGIN_SRC yaml :tangle docker-compose.yml
+version: "2"
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 68:68/tcp
+      - 68:68/udp
+      - 853:853/tcp
+      - 3000:3000/tcp
+    environment:
+      - USER_ID=998
+      - GROUP_ID=100
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/work:/opt/adguardhome/work
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/conf:/opt/adguardhome/conf
+    restart: unless-stopped
+#+END_SRC
+
+There are many ports exposed by the container and many of them are to be mapped to the same port on server. Here is what those ports are used for:
++ 53 (tcp/udp) :: Used by DNS service for domain name resolutoin
++ 67 (udp) :: Bootstrap protocol server. Used by DHCP servers to communicate addressing information to remote DHCP clients. Cool stuff, we can use Adguard to act as DHCP server as well.
++ 68 (tcp/udp) :: Bootstrap protocol client. Used by client machines to obtain dynamic IP addressing information from a DHCP server.
++ 853 (tcp)  ::  DNS over TLS. A bit more secured.
++ 3000 (tcp) :: AdGuard Home web interface.
+
+* Refrences
+- [[https://github.com/paperless-ngx/paperless-ngx][Paperless-ngx Github]]
+- [[https://github.com/bauerj/paperless_app][Paperless app]]

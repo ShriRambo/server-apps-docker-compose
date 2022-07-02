@@ -1,0 +1,21 @@
+version: "2"
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 68:68/tcp
+      - 68:68/udp
+      - 853:853/tcp
+      - 3000:3000/tcp
+    environment:
+      - USER_ID=998
+      - GROUP_ID=100
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/work:/opt/adguardhome/work
+      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/conf:/opt/adguardhome/conf
+    restart: unless-stopped
