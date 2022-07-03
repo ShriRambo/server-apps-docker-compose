@@ -16,7 +16,7 @@ Redis broker
       name: paperless-redis-broker
       restart: unless-stopped
       volumes:
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/redisdata:/data
+        - /mnt/local/appdata/paperless-ngx/redisdata:/data
 
 #+END_SRC
 
@@ -27,7 +27,7 @@ Postgres database
       name: paperless-db
       restart: unless-stopped
       volumes:
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/pgdata:/var/lib/postgresql/data
+        - /mnt/local/appdata/paperless-ngx/pgdata:/var/lib/postgresql/data
       environment:
         POSTGRES_DB: paperless
         POSTGRES_USER: paperless
@@ -52,10 +52,10 @@ Paperless-ngx websever. This is the frontend where I can access the app from my 
         timeout: 10s
         retries: 5
       volumes:
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/data:/usr/src/paperless/data
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/media:/usr/src/paperless/media
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/export:/usr/src/paperless/export
-        - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/paperless-ngx/inbox:/usr/src/paperless/consume
+        - /mnt/local/appdata/paperless-ngx/data:/usr/src/paperless/data
+        - /mnt/local/appdata/paperless-ngx/media:/usr/src/paperless/media
+        - /mnt/local/appdata/paperless-ngx/export:/usr/src/paperless/export
+        - /mnt/local/appdata/paperless-ngx/inbox:/usr/src/paperless/consume
       #env_file: docker-compose.env
       environment:
         PAPERLESS_REDIS: redis://broker:6379

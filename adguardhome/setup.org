@@ -28,8 +28,8 @@ services:
       - GROUP_ID=100
       - TZ=Europe/Amsterdam
     volumes:
-      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/work:/opt/adguardhome/work
-      - /srv/dev-disk-by-uuid-4c9bfec2-c3ff-428e-9363-1171f41a770c/appdata/adguard/conf:/opt/adguardhome/conf
+      - /mnt/local/appdata/adguard/work:/opt/adguardhome/work
+      - /mnt/local/appdata/adguard/conf:/opt/adguardhome/conf
     restart: unless-stopped
 #+END_SRC
 
