@@ -1,0 +1,41 @@
+version: "3"
+services:
+  db_recipes:
+    container_name: tandoor-db
+    restart: always
+    image: postgres:11-alpine
+    volumes:
+      - /mnt/local/appdata/tandoor/db:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+
+  web_recipes:
+    container_name: tandoor-web
+    restart: always
+    image: vabene1111/recipes
+    env_file:
+      - ./.env
+    volumes:
+      - /mnt/local/appdata/tandoor/staticfiles:/opt/recipes/staticfiles
+      - nginx_config:/opt/recipes/nginx/conf.d
+      - /mnt/local/appdata/tandoor/mediafiles:/opt/recipes/mediafiles
+    depends_on:
+      - db_recipes
+
+  nginx_recipes:
+    container_name: tandoor-app
+    image: nginx:mainline-alpine
+    restart: always
+    ports:
+      - 49185:80
+    env_file:
+      - ./.env
+    depends_on:
+      - web_recipes
+    volumes:
+      - nginx_config:/etc/nginx/conf.d:ro
+      - /mnt/local/appdata/tandoor/staticfiles:/static:ro
+      - /mnt/local/appdata/tandoor/mediafiles:/media:ro
+      
+volumes:
+  nginx_config:

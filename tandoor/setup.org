@@ -1,0 +1,64 @@
+#+TITLE: Tandoor Recipes
+#+AUTHOR: shrirambo
+#+DATE: 3st of July, 2022
+#+OPTIONS: tex:t toc:nil
+
+------
+[[https://docs.tandoor.dev][Tandoor]] is a recipe management and meal planner app that can be self hosted on a server. 
+
+Database:
+#+BEGIN_SRC yaml :tangle docker-compose.yml
+version: "3"
+services:
+  db_recipes:
+    container_name: tandoor-db
+    restart: always
+    image: postgres:11-alpine
+    volumes:
+      - /mnt/local/appdata/tandoor/db:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+#+END_SRC
+
+Web pages:
+#+BEGIN_SRC yaml :tangle docker-compose.yml
+  web_recipes:
+    container_name: tandoor-web
+    restart: always
+    image: vabene1111/recipes
+    env_file:
+      - ./.env
+    volumes:
+      - /mnt/local/appdata/tandoor/staticfiles:/opt/recipes/staticfiles
+      - nginx_config:/opt/recipes/nginx/conf.d
+      - /mnt/local/appdata/tandoor/mediafiles:/opt/recipes/mediafiles
+    depends_on:
+      - db_recipes
+#+END_SRC
+
+Webserver 
+#+BEGIN_SRC yaml :tangle docker-compose.yml
+  nginx_recipes:
+    container_name: tandoor-app
+    image: nginx:mainline-alpine
+    restart: always
+    ports:
+      - 49185:80
+    env_file:
+      - ./.env
+    depends_on:
+      - web_recipes
+    volumes:
+      - nginx_config:/etc/nginx/conf.d:ro
+      - /mnt/local/appdata/tandoor/staticfiles:/static:ro
+      - /mnt/local/appdata/tandoor/mediafiles:/media:ro
+      
+volumes:
+  nginx_config:
+#+END_SRC
+
+In addition to this, an .env file is needed which is available in the same repo. For me, I could only get it work by providing ~PUID~ and ~PGID~ as environment variables.
+
+* Reference
++ [[https://docs.tandoor.dev][Tandoor Recipes Docs]]
++ [[https://github.com/TandoorRecipes/recipes][Tandoor Recipes Github]]
