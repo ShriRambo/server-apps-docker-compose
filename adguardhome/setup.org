@@ -37,5 +37,6 @@ There are many ports exposed by the container and many of them are to be mapped 
 + 53 (tcp/udp) :: Used by DNS service for domain name resolutoin
 + 67 (udp) :: Bootstrap protocol server. Used by DHCP servers to communicate addressing information to remote DHCP clients. Cool stuff, we can use Adguard to act as DHCP server as well.
 + 68 (tcp/udp) :: Bootstrap protocol client. Used by client machines to obtain dynamic IP addressing information from a DHCP server.
+*Note*: This port can be used by the host machine if static IP is not configured. And the docker container will not start as the port cannot be mapped
 + 853 (tcp)  ::  DNS over TLS. A bit more secured.
 + 3000 (tcp) :: AdGuard Home web interface.
