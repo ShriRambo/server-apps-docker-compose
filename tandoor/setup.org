@@ -1,6 +1,6 @@
 #+TITLE: Tandoor Recipes Setup
 #+AUTHOR: shrirambo
-#+DATE: 3st of July, 2022
+#+DATE: [2022-07-03]
 #+OPTIONS: tex:t toc:nil
 
 ------
